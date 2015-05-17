@@ -10,7 +10,7 @@ module.exports = (grunt) ->
 			distDirectory: 'dist'
 			srcDirectory: 'src'
 			tempDirectory: '.temp'
-			
+			bowerDirectory: '.components'
 		# Gets dependent components from bower
 		# see bower.json file
 		bower:
@@ -18,9 +18,10 @@ module.exports = (grunt) ->
 				options:
 					cleanTargetDir: true
 					copy: true
-					layout: (type, component) ->
-						path.join type
-					targetDir: '.components/'
+					layout: (type, component, source) ->
+						if type is '__untyped__' then type = source.substring (source.lastIndexOf '.') + 1
+						path.join component, type
+					targetDir: '<%= settings.bowerDirectory %>'
 			uninstall:
 				options:
 					cleanBowerDir: true
@@ -65,7 +66,6 @@ module.exports = (grunt) ->
 						level: 'ignore'
 					no_tabs:
 						level: 'ignore'
-
 		# Copies directories and files from one location to another
 		copy:
 			app:
@@ -75,9 +75,9 @@ module.exports = (grunt) ->
 					dest: '<%= settings.tempDirectory %>'
 					expand: true
 				,
-					cwd: '.components/'
+					cwd: '<%= settings.bowerDirectory %>'
 					src: '**'
-					dest: '<%= settings.tempDirectory %>'
+					dest: '<%= settings.tempDirectory %>/vendors'
 					expand: true
 				]
 			dev:
@@ -99,7 +99,99 @@ module.exports = (grunt) ->
 					dest: '<%= settings.distDirectory %>'
 					expand: true
 				]
+		# Convert CoffeeScript classes to AngularJS modules
+		ngClassify:
+			app:
+				files: [
+					cwd: '<%= settings.tempDirectory %>'
+					src: '**/*.coffee'
+					dest: '<%= settings.tempDirectory %>'
+					expand: true
+				]
+		shimmer:
+			dev:
+				cwd: '.temp/scripts'
+				src: [
+					'**/*.{coffee,js}'
+					'!libs/angular.{coffee,js}'
+					'!libs/angular-route.{coffee,js}'
+					'!libs/require.{coffee,js}'
+				]
+				order: [
+					'libs/angular.min.js'
+					'NGAPP':
+						'ngRoute': 'libs/angular-route.min.js'
+				]
+				require: 'NGBOOTSTRAP'
+		# Run tasks when monitored files change
+		watch:
+			basic:
+				files: [
+					'src/fonts/**'
+					'src/images/**'
+					'src/scripts/**/*.js'
+					'src/styles/**/*.css'
+					'src/**/*.html'
+				]
+				tasks: [
+					'copy:app'
+					'copy:dev'
+				]
+				options:
+					livereload: true
+					nospawn: true
+			coffee:
+				files: 'src/scripts/**/*.coffee'
+				tasks: [
+					'clean:working'
+					'coffeelint'
+					'copy:app'
+					'shimmer:dev'
+					'coffee:app'
+					'copy:dev'
+				]
+				options:
+					livereload: true
+					nospawn: true
+		# ensure only tasks are executed for the changed file
+		# without this, the tasks for all files matching the original pattern are executed
+		grunt.event.on 'watch', (action, filepath, key) ->
+			file = filepath.substr(4) # trim "src/" from the beginning.  I don't like what I'm doing here, need a better way of handling paths.
+			dirname = path.dirname file
+			ext = path.extname file
+			basename = path.basename file, ext
 
+			grunt.config ['copy', 'app'],
+				cwd: 'src/'
+				src: file
+				dest: '.temp/'
+				expand: true
+
+			copyDevConfig = grunt.config ['copy', 'dev']
+			copyDevConfig.src = file
+
+			if key is 'coffee'
+				# delete associated temp file prior to performing remaining tasks
+				# without doing so, shimmer may fail
+				grunt.config ['clean', 'working'], [
+					path.join('.temp', dirname, "#{basename}.{coffee,js,js.map}")
+				]
+
+				copyDevConfig.src = [
+					path.join(dirname, "#{basename}.{coffee,js,js.map}")
+					'scripts/main.{coffee,js,js.map}'
+				]
+
+				coffeeConfig = grunt.config ['coffee', 'app', 'files']
+				coffeeConfig.src = file
+				coffeeLintConfig = grunt.config ['coffeelint', 'app', 'files']
+				coffeeLintConfig = filepath
+
+				grunt.config ['coffee', 'app', 'files'], coffeeConfig
+				grunt.config ['coffeelint', 'app', 'files'], coffeeLintConfig
+
+			grunt.config ['copy', 'dev'], copyDevConfig
+				
 	# Compiles the app with non-optimized build settings
 	# Places the build artifacts in the dist directory
 	# Enter the following command at the command line to execute this build task:
@@ -107,8 +199,9 @@ module.exports = (grunt) ->
 	grunt.registerTask 'build', [
 		'clean:working'
 		'bower:install'
-		'coffeelint'
 		'copy:app'
+		'shimmer:dev'
+		'ngClassify'
 		'coffee:app'
 		'copy:dev'
 	]

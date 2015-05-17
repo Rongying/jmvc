@@ -6,6 +6,31 @@
     "Rongying <fee.zry@gmail.com>"
   ],
   "license": "MIT",
+  "dependencies": {
+    "angular": "1.3.15",
+    "angular-route": "~1.3.15",
+    "bootstrap": "~3.3.4",
+    "requirejs": "~2.1.17"
+  },
+  "exportsOverride": {
+    "angular": {
+      "": "angular.min.js{,.map}"
+    },
+    "angular-route": {
+      "scripts/libs": "angular-route.min.js{,.map}"
+    },
+    "bootstrap": {
+      "fonts": "dist/fonts/*.{eot,svg,ttf,woff}",
+      "styles": "less/*.less",
+      "styles/mixins": "less/mixins/*.less"
+    },
+    "jquery": {
+      "scripts/libs": "none"
+    },
+    "requirejs": {
+      "scripts/libs": "require.js"
+    }
+  },
   "ignore": [
     "**/.*",
     "node_modules",

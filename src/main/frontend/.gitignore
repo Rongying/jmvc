@@ -1,0 +1,6 @@
+dist/**
+.components/**
+.temp/**
+node
+node_modules
+bower_components

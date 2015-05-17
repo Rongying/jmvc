@@ -7,8 +7,6 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>jmvc Maven Webapp</name>
   <url>http://maven.apache.org</url>
-  https://github.com/allegro/grunt-maven-plugin
-  https://mrhanlon.com/posts/using-npm-bower-and-grunt-with-maven/
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -38,26 +36,30 @@
 		 <plugin>
 		    <groupId>pl.allegro</groupId>
 		    <artifactId>grunt-maven-plugin</artifactId>
-		    <version>1.5.9</version>
+		    <version>1.5.0</version>
 		    <configuration>
 		        <!-- relative to src/main/webapp/, default: static -->
-		        <jsSourceDirectory>src/main/frontend</jsSourceDirectory>
-		
+				<gruntBuildDirectory>src/main/frontend</gruntBuildDirectory>
+				<sourceDirectory>src/main/frontend</sourceDirectory>
+		        <jsSourceDirectory></jsSourceDirectory>
 		        <!-- example options usage to get verbose output in logs -->
+<!-- 
 		        <gruntOptions>
-		            <gruntOption>--verbose</gruntOption>
+		            <gruntOption></gruntOption>
 		        </gruntOptions>
-		
+ -->		
 		        <!-- example npm install env variable -->
+<!-- 
 		        <npmEnvironmentVar>
 		            <PHANTOMJS_CDNURL>http://cnpmjs.org/downloads</PHANTOMJS_CDNURL>
 		        </npmEnvironmentVar>
-		
+ -->		
 		        <!-- example options usage to filter variables in given resource -->
+<!-- 
 		        <filteredResources>
 		            <filteredResource>maven-properties.json</filteredResource>
 		        </filteredResources>
-		
+ -->		
 		    </configuration>
 		    <executions>
 		        <execution>
@@ -65,7 +67,7 @@
 		                <goal>create-resources</goal>
 		                <goal>npm</goal>
 		                <!-- or npm-offline if npm failure is not an option -->
-		                <goal>bower</goal>
+		                <!-- <goal>bower</goal> -->
 		                <goal>grunt</goal>
 		            </goals>
 		        </execution>
