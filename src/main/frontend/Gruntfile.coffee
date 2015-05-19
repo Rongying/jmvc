@@ -110,17 +110,21 @@ module.exports = (grunt) ->
 				]
 		shimmer:
 			dev:
-				cwd: '.temp/scripts'
+				cwd: '.temp/'
 				src: [
 					'**/*.{coffee,js}'
-					'!libs/angular.{coffee,js}'
-					'!libs/angular-route.{coffee,js}'
-					'!libs/require.{coffee,js}'
+					'!vendors/angular/angular.{coffee,js}'
+					'!vendors/angular-route/angular-route.{coffee,js}'
+					'!vendors/requirejs/require.{coffee,js}'
+					#'!vendors/jquery/jquery.{coffee,js}'
+					'!vendors/bootstrap/js/bootstrap.{coffee,js}'
 				]
 				order: [
-					'libs/angular.min.js'
+					'vendors/angular/angular.min.js'
+					'vendors/jquery/jquery.min.js'
+					'vendors/bootstrap/js/bootstrap.min.js'
 					'NGAPP':
-						'ngRoute': 'libs/angular-route.min.js'
+						'ngRoute': 'vendors/angular-route/angular-route.min.js'
 				]
 				require: 'NGBOOTSTRAP'
 		# Run tasks when monitored files change

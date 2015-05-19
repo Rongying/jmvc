@@ -1,0 +1,10 @@
+{
+    "filesToWatch": "/Users/rongyingzhou/Documents/workspace/jmvc/src/main/frontend/**",
+    "directoryToWatch": "/Users/rongyingzhou/Documents/workspace/jmvc/src/main/frontend",
+    "projectRootPath": "/Users/rongyingzhou/Documents/workspace/jmvc",
+    "targetPath": "/Users/rongyingzhou/Documents/workspace/jmvc/target",
+    "sourceDirectory": "src/main",
+    "jsSourceDirectory": "frontend",
+    "warTargetDirectory": "frontend",
+    "filteredFiles": ["**/node_modules.tar"]
+}

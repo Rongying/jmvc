@@ -40,8 +40,8 @@
 		    <configuration>
 		        <!-- relative to src/main/webapp/, default: static -->
 				<gruntBuildDirectory>src/main/frontend</gruntBuildDirectory>
-				<sourceDirectory>src/main/frontend</sourceDirectory>
-		        <jsSourceDirectory></jsSourceDirectory>
+				<sourceDirectory>src/main</sourceDirectory>
+		        <jsSourceDirectory>frontend</jsSourceDirectory>
 		        <!-- example options usage to get verbose output in logs -->
 <!-- 
 		        <gruntOptions>

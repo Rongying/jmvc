@@ -10,25 +10,26 @@
     "angular": "1.3.15",
     "angular-route": "~1.3.15",
     "bootstrap": "~3.3.4",
-    "requirejs": "~2.1.17"
+    "requirejs": "~2.1.17",
+    "jquery": "~2.1.4"
   },
   "exportsOverride": {
     "angular": {
       "": "angular.min.js{,.map}"
     },
     "angular-route": {
-      "scripts/libs": "angular-route.min.js{,.map}"
+      "": "angular-route.min.js{,.map}"
     },
     "bootstrap": {
       "fonts": "dist/fonts/*.{eot,svg,ttf,woff}",
-      "styles": "less/*.less",
-      "styles/mixins": "less/mixins/*.less"
+      "css": "dist/css/*.min.css{,.map}",
+      "js": "dist/js/*.min.js{,.map}"
     },
     "jquery": {
-      "scripts/libs": "none"
+      "": "dist/jquery.min.js{,.map}"
     },
     "requirejs": {
-      "scripts/libs": "require.js"
+      "": "require.js"
     }
   },
   "ignore": [
